@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            text-align: center;
+            /* border-collapse: collapse; */
+            padding: 10px;
+
+        }
+    </style>
+</head>
+<body>
+
+    <h1> 
+        Table Product
+    </h1>
+    <br>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>
+                No
+                </th>
+                <th>
+                Product Name
+                </th>
+                <th>
+                Stock
+                </th>
+                <th>
+                Price
+                </th>
+                <th>
+                Category
+                </th>
+                <th>
+                    Action
+                    </th>
+            </tr>
+        </thead>
+        <tbody id="produkBody">
+        
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <input type="text" id="txtProductName">
+                </td>
+                <td>
+                    <input type="number" id="txtStock">
+                </td>
+                <td>
+                    <input type="number" id="txtPrice">
+                </td>
+                <td>
+                    <select id="ddCategory">
+                        <option value="Fruit">Fruit</option>
+                        <option value="Electronic">Electronic</option>
+                    </select>
+
+                </td>
+                <td>
+                    <button onclick="Add()">Add</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <h1> 
+        Table Cart
+    </h1>
+    <br>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>
+                No
+                </th>
+                <th>
+                Product Name
+                </th>
+                <th>
+                Qty
+                </th>
+                <th>
+                Price
+                </th>
+                <th>
+                Category
+                </th>
+                <th>
+                    Action
+                    </th>
+            </tr>
+        </thead>
+        <tbody id="CartBody">
+        
+        </tbody>
+        <!-- <tfoot>
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <input type="text" id="txtProductName">
+                </td>
+                <td>
+                    <input type="number" id="txtStock">
+                </td>
+                <td>
+                    <input type="number" id="txtPrice">
+                </td>
+                <td>
+                    <select id="ddCategory">
+                        <option value="Fruit">Fruit</option>
+                        <option value="Electronic">Electronic</option>
+                    </select>
+
+                </td>
+                <td>
+                   
+                </td>
+            </tr>
+        </tfoot> -->
+    </table>
+
+        <h1 id="hTotal">
+            TOTAL HARGA <br>
+        </h1>
+
+<script>
+    class Produk
+    {
+        constructor(Name,Stock, Price, Category){
+            this.Name = Name
+            this.Stock = Stock
+            this.Price = Price
+            this.Category = Category
+
+        }
+    }
+
+    class Cart
+    {
+        constructor(Name,Qty , Price, Category, idxProduk){
+            this.Name = Name
+            this.Qty = Qty
+            this.Price = Price
+            this.Category = Category
+            this.idxProduk = idxProduk
+
+        }
+    }
+
+    function AddToCart(idx){
+    let produkName = DaftarProduk[idx].Name
+    let Qty = prompt(`Masukan Qty ${produkName} `)
+    let Price = DaftarProduk[idx].Price
+    let Category = DaftarProduk[idx].Category
+
+    // arrTemp = [tv,iphone,laptop]
+    let arrTemp = arrCart.map(function (item) {
+        return item.Name;
+    } )
+
+    if (!isNaN( parseInt(Qty.match(/^-?\d+$/))))
+    {
+        if(Qty> DaftarProduk[idx].Stock)
+        {
+            return alert('Error Qty lebih banyak dari Stock')
+        }
+
+        if(arrTemp.includes(produkName))
+        {
+        let index =  arrTemp.indexOf(produkName)
+        arrCart[index].Qty = parseInt(arrCart[index].Qty) + parseInt(Qty)
+        }
+        else{
+            let cart = new Cart(produkName, parseInt(Qty), Price, Category, idx)
+            arrCart.push(cart)
+        }
+
+        DaftarProduk[idx].Stock -= Qty
+
+    }
+   
+
+    renderData()
+    renderCart()
+
+    }
+
+    function deleteCart(deleteIdx){
+    let idxProduk =  arrCart[deleteIdx].idxProduk
+
+    DaftarProdukk[idxProduk].Stock = 
+    parseInt(DaftarProduk[idxProduk].Stock) + parseInt(arrCart[deleteIdx].Qty)
+
+    arrCart.splice(deleteIdx, 1)
+    renderData()
+    renderCart()
+
+    }
+
+    function AddToCart(idx){
+    let produkName = DaftarProduk[idx].Name
+    let Qty = prompt(`Masukan Qty ${produkName} `)
+    let Price = DaftarProduk[idx].Price
+    let Category = DaftarProduk[idx].Category
+
+    let arrTemp = arrCart.map(function (item) {
+        return item.Name;
+    } )
+
+    if (!isNaN( parseInt(Qty.match(/^-?\d+$/))))
+    {
+        if(Qty> DaftarProduk[idx].Stock)
+        {
+            return alert('Error Qty lebih banyak dari Stock')
+        }
+
+        if(arrTemp.includes(produkName))
+        {
+        let index =  arrTemp.indexOf(produkName)
+        arrCart[index].Qty = parseInt(arrCart[index].Qty) + parseInt(Qty)
+        }
+        else{
+            let cart = new Cart(produkName, parseInt(Qty), Price, Category, idx)
+            arrCart.push(cart)
+        }
+
+        DaftarProduk[idx].Stock -= Qty
+
+    }
+   
+
+    renderData()
+    renderCart()
+
+    }
+
+    function saveCart(editIdx){
+
+    let qty = parseInt(document.getElementById('txtEditQty').value)
+    let objCart = arrCart[editIdx]
+    let objProduk =  DaftarProduk[objCart.idxProduk]
+    
+    if(qty <= 0)
+        {
+            return alert('Error Qty harus lebih dari 0')
+        }
+
+    if(arrCart[editIdx].Qty < qty )   
+    { 
+        if(qty> (objProduk.Stock +  parseInt(objCart.Qty) ))
+        {
+            return alert('Error Qty lebih banyak dari Stock')
+        }
+
+    DaftarProduk[arrCart[editIdx].idxProduk].Stock = 
+    parseInt(objProduk.Stock) - (qty - parseInt(objCart.Qty) )
+
+    arrCart[editIdx].Qty = qty
+    }
+    else 
+    {
+    DaftarProduk[arrCart[editIdx].idxProduk].Stock = 
+    parseInt(objProduk.Stock) + (qty - parseInt(objCart.Qty))
+
+    arrCart[editIdx].Qty = qty
+    }
+
+    renderCart()
+    renderData()
+
+    }
+
+    let DaftarProduk = [
+       new Produk('Apel', 10, 10000, 'Fruits'),
+       new Produk('Tv', 20,  300000,'Electronic'),
+       new Produk('Iphone', 5, 5000000, 'Electronic')
+    ]
+
+    let arrCart = []
+
+    function renderCart(editIdx){
+        let htmlResult = ""
+        let harga = 0
+
+        arrCart.forEach((item,idx) => 
+        {
+            harga += parseInt(item.Qty) * parseInt(item.Price)
+
+            if(editIdx == idx)
+            {
+            htmlResult += 
+            `
+            <tr>
+               
+                <td>
+                    ${idx + 1} 
+                </td>
+                <td>
+                    ${item.Name}
+                </td>
+                <td>
+                    <input type="number" id="txtEditQty" placeholder="Qty Cart" value="${item.Qty}">
+                </td>
+                <td>
+                    Rp.${parseInt(item.Price).toLocaleString()}
+                </td>
+                <td>
+                    ${item.Category} 
+                </td>
+                <td>
+                    <button onclick="saveCart(${idx})">Save</button>
+                    <button onclick="renderCart()">Cancel</button>
+
+                </td>
+            </tr>
+            `    
+            
+            }
+            else
+            {
+            htmlResult +=
+            `
+            <tr>
+            <td>
+                   ${idx + 1} 
+                </td>
+                <td>
+                    ${item.Name} 
+
+                </td>
+                <td>
+                    ${item.Qty} 
+                </td>
+                <td>
+                    Rp.${parseInt(item.Price).toLocaleString()}
+                </td>
+                <td>
+                    ${item.Category} 
+                </td>
+                <td>
+                    <button onclick="deleteCart(${idx})">Delete From Cart</button>
+                    <button onclick="renderCart(${idx})">Edit Stock</button>
+                </td>
+                </tr>
+                `
+            }
+        
+            // alert(harga)
+        })
+        
+        document.getElementById('CartBody').innerHTML = htmlResult;
+        document.getElementById('hTotal').innerHTML = `TOTAL HARGA Rp. ${parseInt(harga).toLocaleString()}`;
+
+    }
+    
+    function renderData(){
+        let htmlResult = ""
+
+        DaftarProduk.forEach((item,idx) => 
+        {
+            htmlResult +=
+            `
+            <tr>
+            <td>
+                   ${idx + 1} 
+                </td>
+                <td>
+                    ${item.Name} 
+
+                </td>
+                <td>
+                    ${item.Stock} 
+                </td>
+                <td>
+                    Rp.${parseInt(item.Price).toLocaleString()}
+                </td>
+                <td>
+                    ${item.Category} 
+                </td>
+                <td>
+                    <button onclick="deleteData(${idx})">Delete</button>
+                    <button onclick="AddToCart(${idx})">Add To Cart</button>
+                </td>
+                </tr>
+                `
+        })
+        document.getElementById('produkBody').innerHTML = htmlResult;
+    }
+
+    renderData()
+    function Add ()
+    {
+    let productName = document.getElementById("txtProductName").value
+    let stock = document.getElementById("txtStock").value
+    let price = document.getElementById("txtPrice").value
+    let category = document.getElementById("ddCategory").value
+
+    const newProduct = new Produk(productName,stock,price,category)
+
+    DaftarProduk.push(newProduct)
+    renderData()
+    document.getElementById("txtProductName").value = ''
+    document.getElementById("txtStock").value = 0
+    document.getElementById("txtPrice").value = 0
+    }
+
+    function deleteData(deleteIdx){
+        let arrTemp = arrCart.map(function (item) {
+        return item.Name;
+    } )
+
+    if(arrTemp.includes(DaftarProduk[deleteIdx].Name))
+    {
+        return alert('Gagal Delete, Stock terdapat di Cart')
+    }
+
+
+
+    DaftarProduk.splice(deleteIdx, 1)
+    renderData()
+    }
+
+    
+
+</script>
+</body>
+</html>
+
+
+<!-- 
+soal 
+
+buat market 
+ada table product
+name, price, category, stock
+
+bisa add, delete, add to Cart
+
+table cart 
+name, price,category, qty
+
+bisa delete
+ada total harga dari semua yg ada di cart 
+
+saat masuk ke cart prompt brp banyak stock yg mau dimasukan ke cart
+stock di table product dikurang dengan product yg dimasukan ke Cart
+apa bila cart didelete maka stock + dengan qty cart 
+ -->
